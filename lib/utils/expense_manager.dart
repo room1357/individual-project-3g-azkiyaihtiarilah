@@ -1,5 +1,82 @@
 import '../models/expense.dart';
 
+class Looping {
+  //hanya digunakan latihan 
+  static List<Expense> expenses = [
+    Expense(
+      id: '1',
+      title: 'Sarapan Nasi Uduk',
+      amount: 15000,
+      category: 'Makanan',
+      date: DateTime(2024, 9, 15, 7, 30),
+      description: 'Sarapan nasi uduk + teh hangat',
+    ),
+    Expense(
+      id: '2',
+      title: 'Ngopi Pagi',
+      amount: 20000,
+      category: 'Makanan',
+      date: DateTime(2024, 9, 15, 9, 0),
+      description: 'Kopi latte di kedai dekat kampus',
+    ),
+    Expense(
+      id: '3',
+      title: 'Makan Siang Nasi Padang',
+      amount: 30000,
+      category: 'Makanan',
+      date: DateTime(2024, 9, 15, 12, 30),
+      description: 'Nasi padang lauk ayam goreng + sayur',
+    ),
+    Expense(
+      id: '4',
+      title: 'Cemilan Sore',
+      amount: 10000,
+      category: 'Makanan',
+      date: DateTime(2024, 9, 15, 16, 0),
+      description: 'Gorengan dan es teh',
+    ),
+    Expense(
+      id: '5',
+      title: 'Makan Malam Ayam Geprek',
+      amount: 25000,
+      category: 'Makanan',
+      date: DateTime(2024, 9, 15, 19, 0),
+      description: 'Ayam geprek level pedas + nasi',
+    ),
+    Expense(
+      id: '6',
+      title: 'Ngemil Tengah Malam',
+      amount: 12000,
+      category: 'Makanan',
+      date: DateTime(2024, 9, 15, 23, 30),
+      description: 'Indomie goreng + teh botol',
+    ),
+  ];
+
+  // Menghitung total per kategori (for loop)
+  static Map<String, double> getTotalByCategory(List<Expense> expenses) {
+    Map<String, double> result = {};
+    for (int i = 0; i < expenses.length; i++) {
+      var expense = expenses[i];
+      result[expense.category] =
+          (result[expense.category] ?? 0) + expense.amount;
+    }
+    return result;
+  }
+
+  // Total semua pengeluaran
+  static double getTotal(List<Expense> expenses) {
+    return expenses.fold(0, (sum, expense) => sum + expense.amount);
+  }
+
+  // Cari pengeluaran terbesar
+  static Expense? getHighestExpense(List<Expense> expenses) {
+    if (expenses.isEmpty) return null;
+    return expenses.reduce((a, b) => a.amount > b.amount ? a : b);
+  }
+}
+
+
 class ExpenseManager {
   static List<Expense> expenses = [/* data expenses */];
 
