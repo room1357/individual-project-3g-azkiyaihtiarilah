@@ -3,6 +3,7 @@ import 'login_screen.dart';
 import 'expense_list_screen.dart';
 import 'profile_screen.dart';
 import 'setting_screen.dart';
+import 'advanced_list_data.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -47,7 +48,19 @@ class HomeScreen extends StatelessWidget {
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
                 children: [
-                  _buildDashboardCard('Pengeluaran', Icons.attach_money, Colors.green, () {
+                  _buildDashboardCard('Pengeluaran Advanced',
+                    Icons.bar_chart,
+                    Colors.green,
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AdvancedExpenseListScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  _buildDashboardCard('Pengeluaran Basic', Icons.attach_money, Colors.green, () {
                     // Navigasi ke ExpenseListScreen
                     Navigator.push(
                       context,
