@@ -16,8 +16,33 @@ class RegisterScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Form fields...
-            
+            // Form fields nama
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Nama',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.person),
+              ),
+            ),
+            SizedBox(height: 16),
+            // Form fields username
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Username',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.account_circle),
+              ),
+            ),      
+            SizedBox(height: 16),
+            // Form fields password
+            TextField(
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: 'Password',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.lock),
+              ),
+            ),SizedBox(height: 24), 
             // Tombol register
             ElevatedButton(
               onPressed: () {
