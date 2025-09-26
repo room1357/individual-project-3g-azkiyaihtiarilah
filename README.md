@@ -1,17 +1,29 @@
-# pemrograman_mobile
+# 📱 Pemrograman Mobile – Flutter Project
 
-A new Flutter project.
+Selamat datang di repositori **Pemrograman Mobile**!  
+Proyek ini dibuat sebagai bagian dari pembelajaran pengembangan aplikasi mobile menggunakan **Flutter**.
 
-## Getting Started
+---
 
-Name: Azkiya Putri Ihtiarilah
-Nim: 2341760175
+## 👩‍💻 Identitas
+- **Nama** : Azkiya Putri Ihtiarilah  
+- **NIM** : 2341760175  
 
-A few resources to get you started if this is your first Flutter project:
+---
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 🚀 Getting Started
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Beberapa sumber untuk memulai belajar Flutter:
+
+- 📘 [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)  
+- 📚 [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)  
+
+---
+
+## 📖 Dokumentasi
+
+Untuk bantuan lebih lanjut dalam pengembangan Flutter, silakan lihat:  
+🔗 [Flutter online documentation](https://docs.flutter.dev/)  
+Di sana tersedia tutorial, contoh kode, panduan mobile development, serta referensi lengkap API.  
+
+---
