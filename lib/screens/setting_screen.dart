@@ -1,5 +1,3 @@
-// 
-
 import 'package:flutter/material.dart';
 import 'package:pemrograman_mobile/screens/profile_screen.dart';
 import 'about_screen.dart';

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../utils/expense_manager.dart';
-import '../models/expense.dart';
 
 class StatisticScreen extends StatelessWidget {
   const StatisticScreen({super.key});

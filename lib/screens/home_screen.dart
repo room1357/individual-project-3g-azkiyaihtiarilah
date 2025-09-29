@@ -7,6 +7,7 @@ import 'advanced_list_data.dart';
 import 'about_screen.dart';
 import 'category_screen.dart';
 import 'statistics_screen.dart';
+import 'message_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -77,7 +78,12 @@ class HomeScreen extends StatelessWidget {
                       );
                     },
                   ),
-                  _buildDashboardCard('Pesan',Icons.message, Colors.orange, null, 
+                  _buildDashboardCard('Pesan',Icons.message,Colors.orange,() {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const MessageScreen()),
+                      );
+                    },
                   ),
                   _buildDashboardCard('Statistik',Icons.pie_chart,Colors.indigo,() {
                       Navigator.push(
