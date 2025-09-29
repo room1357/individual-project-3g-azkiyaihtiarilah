@@ -10,8 +10,6 @@ class AdvancedExpenseListScreen extends StatefulWidget {
   _AdvancedExpenseListScreenState createState() => _AdvancedExpenseListScreenState();
 }
 
-
-
 class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
   // Gunakan data dari ExpenseManager
   List<Expense> expenses = ExpenseManager.expenses;
@@ -138,7 +136,49 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
     );
   }
 
-  // Detail pengeluaran + tombol hapus
+  // // Detail pengeluaran + tombol hapus
+  // void _showExpenseDetails(BuildContext context, Expense expense) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) => AlertDialog(
+  //       title: Text(expense.title),
+  //       content: Column(
+  //         mainAxisSize: MainAxisSize.min,
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Text('Jumlah: ${expense.formattedAmount}'),
+  //           const SizedBox(height: 8),
+  //           Text('Kategori: ${expense.category}'),
+  //           const SizedBox(height: 8),
+  //           Text('Tanggal: ${expense.formattedDate}'),
+  //           const SizedBox(height: 8),
+  //           Text('Deskripsi: ${expense.description}'),
+  //         ],
+  //       ),
+  //       actions: [
+  //         TextButton(
+  //           onPressed: () => Navigator.pop(context),
+  //           child: const Text('Tutup'),
+  //         ),
+  //         TextButton(
+  //           onPressed: () {
+  //             setState(() {
+  //               ExpenseManager.expenses.remove(expense);
+  //               _filterExpenses();
+  //             });
+  //             Navigator.pop(context);
+  //             ScaffoldMessenger.of(context).showSnackBar(
+  //               SnackBar(content: Text('Pengeluaran dihapus')),
+  //             );
+  //           },
+  //           child: const Text('Hapus', style: TextStyle(color: Colors.red)),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+// Detail pengeluaran + tombol hapus & edit
   void _showExpenseDetails(BuildContext context, Expense expense) {
     showDialog(
       context: context,
@@ -164,6 +204,13 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
           ),
           TextButton(
             onPressed: () {
+              Navigator.pop(context);
+              _showEditExpenseDialog(expense);
+            },
+            child: const Text('Edit', style: TextStyle(color: Colors.blue)),
+          ),
+          TextButton(
+            onPressed: () {
               setState(() {
                 ExpenseManager.expenses.remove(expense);
                 _filterExpenses();
@@ -175,6 +222,82 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
             },
             child: const Text('Hapus', style: TextStyle(color: Colors.red)),
           ),
+        ],
+      ),
+    );
+  }
+
+  // Dialog edit pengeluaran
+  void _showEditExpenseDialog(Expense expense) {
+    final titleController = TextEditingController(text: expense.title);
+    final amountController = TextEditingController(text: expense.amount.toString());
+    final descController = TextEditingController(text: expense.description);
+    String selectedCategory = expense.category;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Edit Pengeluaran'),
+        content: SingleChildScrollView(
+          child: Column(
+            children: [
+              TextField(
+                controller: titleController,
+                decoration: const InputDecoration(labelText: 'Judul'),
+              ),
+              TextField(
+                controller: amountController,
+                decoration: const InputDecoration(labelText: 'Jumlah'),
+                keyboardType: TextInputType.number,
+              ),
+              DropdownButtonFormField<String>(
+                value: selectedCategory,
+                items: ['Makanan', 'Transportasi', 'Utilitas', 'Hiburan', 'Pendidikan']
+                    .map((cat) => DropdownMenuItem(value: cat, child: Text(cat)))
+                    .toList(),
+                onChanged: (value) {
+                  selectedCategory = value!;
+                },
+                decoration: const InputDecoration(labelText: 'Kategori'),
+              ),
+              TextField(
+                controller: descController,
+                decoration: const InputDecoration(labelText: 'Deskripsi'),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Batal'),
+          ),
+          ElevatedButton(
+          onPressed: () {
+            if (titleController.text.isNotEmpty && amountController.text.isNotEmpty) {
+              final editedExpense = Expense(
+                id: expense.id,
+                title: titleController.text,
+                amount: double.tryParse(amountController.text) ?? 0,
+                category: selectedCategory,
+                date: expense.date,
+                description: descController.text,
+              );
+              setState(() {
+                int idx = ExpenseManager.expenses.indexOf(expense);
+                if (idx != -1) {
+                  ExpenseManager.expenses[idx] = editedExpense;
+                  _filterExpenses();
+                }
+              });
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Pengeluaran berhasil diedit')),
+              );
+            }
+          },
+          child: const Text('Simpan'),
+        ),
         ],
       ),
     );
