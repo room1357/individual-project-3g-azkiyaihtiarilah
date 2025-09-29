@@ -2,6 +2,13 @@ import '../models/expense.dart';
 
 class ExpenseManager {
   static List<Expense> expenses = [/* data expenses */];
+  static List<String> categories = [
+    'Makanan',
+    'Transportasi',
+    'Utilitas',
+    'Hiburan',
+    'Pendidikan',
+  ];
 
   // 1. Mendapatkan total pengeluaran per kategori
   static Map<String, double> getTotalByCategory(List<Expense> expenses) {

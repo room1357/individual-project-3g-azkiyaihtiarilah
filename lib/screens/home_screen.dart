@@ -5,6 +5,7 @@ import 'profile_screen.dart';
 import 'setting_screen.dart';
 import 'advanced_list_data.dart';
 import 'about_screen.dart';
+import 'category_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -77,6 +78,13 @@ class HomeScreen extends StatelessWidget {
                   ),
                   _buildDashboardCard('Pesan',Icons.message, Colors.orange, null, 
                   
+                  ),
+                  _buildDashboardCard('Kategori',Icons.category,Colors.teal,() {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const CategoryScreen()),
+                      );
+                    },
                   ),
                   _buildDashboardCard('Tentang',Icons.info,Colors.red,() {
                       Navigator.push(
