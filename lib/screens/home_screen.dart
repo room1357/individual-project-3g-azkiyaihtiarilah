@@ -4,6 +4,7 @@ import 'expense_list_screen.dart';
 import 'profile_screen.dart';
 import 'setting_screen.dart';
 import 'advanced_list_data.dart';
+import 'about_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -74,11 +75,20 @@ class HomeScreen extends StatelessWidget {
                       );
                     },
                   ),
-                  _buildDashboardCard('Pesan',Icons.message, Colors.orange, null, ),
+                  _buildDashboardCard('Pesan',Icons.message, Colors.orange, null, 
+                  
+                  ),
+                  _buildDashboardCard('Tentang',Icons.info,Colors.red,() {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const AboutScreen(),),
+                      );
+                    },
+                  ),
                   _buildDashboardCard('Pengaturan', Icons.settings,Colors.purple,() {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const SettingScreen(),),
+                        MaterialPageRoute(builder: (context) => const SettingScreen()),
                       );
                     },
                   ),
