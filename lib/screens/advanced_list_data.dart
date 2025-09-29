@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/expense.dart';
 import '../utils/expense_manager.dart';
+import 'expense_form.dart';
 
 class AdvancedExpenseListScreen extends StatefulWidget {
   const AdvancedExpenseListScreen({super.key});
@@ -9,34 +10,11 @@ class AdvancedExpenseListScreen extends StatefulWidget {
   _AdvancedExpenseListScreenState createState() => _AdvancedExpenseListScreenState();
 }
 
-class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
-  List<Expense> expenses = [
-    Expense(
-      id: '1',
-      title: 'Belanja Bulanan',
-      amount: 150000,
-      category: 'Makanan',
-      date: DateTime(2024, 9, 15),
-      description: 'Belanja kebutuhan bulanan di supermarket',
-    ),
-    Expense(
-      id: '2',
-      title: 'Bensin Motor',
-      amount: 50000,
-      category: 'Transportasi',
-      date: DateTime(2024, 9, 14),
-      description: 'Isi bensin motor untuk transportasi',
-    ),
-    Expense(
-      id: '3',
-      title: 'Tagihan Internet',
-      amount: 300000,
-      category: 'Utilitas',
-      date: DateTime(2024, 9, 13),
-      description: 'Tagihan internet bulanan',
-    ),
-  ];
 
+
+class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
+  // Gunakan data dari ExpenseManager
+  List<Expense> expenses = ExpenseManager.expenses;
   List<Expense> filteredExpenses = [];
   String selectedCategory = 'Semua';
   TextEditingController searchController = TextEditingController();
@@ -102,7 +80,7 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildStatCard('Total', 'Rp ${ExpenseManager.getTotal(filteredExpenses).toStringAsFixed(0)}'),
+                _buildStatCard('Total', 'Rp ${_getTotal(filteredExpenses).toStringAsFixed(0)}'),
                 _buildStatCard('Jumlah', '${filteredExpenses.length} item'),
                 _buildStatCard('Rata-rata', 'Rp ${ExpenseManager.getAverageDaily(filteredExpenses).toStringAsFixed(0)}'),
               ],
@@ -139,6 +117,64 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
                     },
                   ),
           ),
+          FloatingActionButton(onPressed:   () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ExpenseFormScreen()),
+            );
+          }),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ExpenseFormScreen()),
+          );
+        },
+        child: const Icon(Icons.add),
+        backgroundColor: Colors.pinkAccent,
+      ),
+    );
+  }
+
+  // Detail pengeluaran + tombol hapus
+  void _showExpenseDetails(BuildContext context, Expense expense) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(expense.title),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Jumlah: ${expense.formattedAmount}'),
+            const SizedBox(height: 8),
+            Text('Kategori: ${expense.category}'),
+            const SizedBox(height: 8),
+            Text('Tanggal: ${expense.formattedDate}'),
+            const SizedBox(height: 8),
+            Text('Deskripsi: ${expense.description}'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Tutup'),
+          ),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                ExpenseManager.expenses.remove(expense);
+                _filterExpenses();
+              });
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Pengeluaran dihapus')),
+              );
+            },
+            child: const Text('Hapus', style: TextStyle(color: Colors.red)),
+          ),
         ],
       ),
     );
@@ -165,6 +201,13 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
         Text(value, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
       ],
     );
+  }
+
+  // Total pengeluaran (semua item)
+  double _getTotal(List<Expense> expenses) {
+    // Gunakan getTotalByCategory lalu jumlahkan semua kategori
+    final totals = ExpenseManager.getTotalByCategory(expenses);
+    return totals.values.fold(0, (sum, value) => sum + value);
   }
 
   // Warna kategori
@@ -201,34 +244,5 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
       default:
         return Icons.attach_money;
     }
-  }
-
-  // Detail pengeluaran
-  void _showExpenseDetails(BuildContext context, Expense expense) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(expense.title),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Jumlah: ${expense.formattedAmount}'),
-            const SizedBox(height: 8),
-            Text('Kategori: ${expense.category}'),
-            const SizedBox(height: 8),
-            Text('Tanggal: ${expense.formattedDate}'),
-            const SizedBox(height: 8),
-            Text('Deskripsi: ${expense.description}'),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Tutup'),
-          ),
-        ],
-      ),
-    );
   }
 }
