@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pemrograman_mobile/screens/login_screen.dart';
 import 'package:pemrograman_mobile/screens/profile_screen.dart';
 import 'about_screen.dart';
 // Tambahkan import jika ada screen lain
@@ -22,7 +23,11 @@ class SettingScreen extends StatelessWidget {
             title: Center(
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                children: [Icon(Icons.person), SizedBox(width: 8), Text('Profil')],
+                children: [
+                  Icon(Icons.person),
+                  SizedBox(width: 8),
+                  Text('Profil'),
+                ],
               ),
             ),
             onTap: () {
@@ -54,7 +59,11 @@ class SettingScreen extends StatelessWidget {
             title: Center(
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                children: [Icon(Icons.settings), SizedBox(width: 8), Text('Pengaturan Akun')],
+                children: [
+                  Icon(Icons.settings),
+                  SizedBox(width: 8),
+                  Text('Pengaturan Akun'),
+                ],
               ),
             ),
             onTap: () {
@@ -66,17 +75,27 @@ class SettingScreen extends StatelessWidget {
             },
           ),
           // Logout
+          // Logout
           ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 0),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 0),
             title: Center(
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                children: [Icon(Icons.logout), SizedBox(width: 8), Text('Logout')],
+                children: const [
+                  Icon(Icons.logout),
+                  SizedBox(width: 8),
+                  Text('Logout'),
+                ],
               ),
             ),
             onTap: () {
-              // Tambahkan aksi logout sesuai kebutuhan
-              Navigator.pop(context);
+              // Tambahkan aksi logout sesuai kebutuhan (misal: hapus sesi)
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                (Route<dynamic> route) =>
+                    false, // hapus semua halaman sebelumnya
+              );
             },
           ),
         ],

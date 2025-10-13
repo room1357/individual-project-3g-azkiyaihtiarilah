@@ -1,6 +1,6 @@
 import '../models/expense.dart';
 
-class ExpenseManager {
+class ExpenseService {
   static List<Expense> expenses = [/* data expenses */];
   static List<String> categories = [
     'Makanan',
@@ -10,13 +10,27 @@ class ExpenseManager {
     'Pendidikan',
   ];
 
+  // Tambahkan fungsi untuk menambah kategori baru
+  static void addCategory(String name) {
+    if (!categories.contains(name)) {
+      categories.add(name);
+    }
+  }
+  
+  // Hapus kategori
+  static void removeCategory(String name) {
+    categories.remove(name);
+  }
+
   // 1. Mendapatkan total pengeluaran per kategori
   static Map<String, double> getTotalByCategory(List<Expense> expenses) {
-    Map<String, double> result = {};
-    for (var expense in expenses) {
-      result[expense.category] = (result[expense.category] ?? 0) + expense.amount;
+    final totals = <String, double>{};
+    for (var cat in categories) {
+      totals[cat] = expenses
+          .where((e) => e.category == cat)
+          .fold(0, (sum, e) => sum + e.amount);
     }
-    return result;
+    return totals;
   }
 
   // 2. Mendapatkan pengeluaran tertinggi

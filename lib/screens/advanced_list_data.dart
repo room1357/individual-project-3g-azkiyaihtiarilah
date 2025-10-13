@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import '../models/expense.dart';
-import '../utils/expense_manager.dart';
+import '../services/expense_service.dart';
 import 'expense_form.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class AdvancedExpenseListScreen extends StatefulWidget {
   const AdvancedExpenseListScreen({super.key});
@@ -12,8 +15,8 @@ class AdvancedExpenseListScreen extends StatefulWidget {
 }
 
 class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
-  // Gunakan data dari ExpenseManager
-  List<Expense> expenses = ExpenseManager.expenses;
+  // Gunakan data dari ExpenseService
+  List<Expense> expenses = ExpenseService.expenses;
   List<Expense> filteredExpenses = [];
   String selectedCategory = 'Semua';
   TextEditingController searchController = TextEditingController();
@@ -30,6 +33,13 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
       appBar: AppBar(
         title: const Text('Pengeluaran Advanced'),
         backgroundColor: Colors.blue,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.download),
+            tooltip: 'Export ke CSV',
+            onPressed: () => _exportToCSV(context, expenses),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -54,22 +64,18 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
             height: 50,
             child: ListView(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
               children:
-                  ['Semua', ...ExpenseManager.categories]
+                  ['Semua', ...ExpenseService.categories]
                       .map(
-                        (category) => Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: FilterChip(
-                            label: Text(category),
-                            selected: selectedCategory == category,
-                            onSelected: (selected) {
-                              setState(() {
-                                selectedCategory = category;
-                                _filterExpenses();
-                              });
-                            },
-                          ),
+                        (category) => FilterChip(
+                          label: Text(category),
+                          selected: selectedCategory == category,
+                          onSelected: (selected) {
+                            setState(() {
+                              selectedCategory = category;
+                              _filterExpenses();
+                            });
+                          },
                         ),
                       )
                       .toList(),
@@ -89,7 +95,7 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
                 _buildStatCard('Jumlah', '${filteredExpenses.length} item'),
                 _buildStatCard(
                   'Rata-rata',
-                  'Rp ${ExpenseManager.getAverageDaily(filteredExpenses).toStringAsFixed(0)}',
+                  'Rp ${ExpenseService.getAverageDaily(filteredExpenses).toStringAsFixed(0)}',
                 ),
               ],
             ),
@@ -163,47 +169,28 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
     );
   }
 
-  // // Detail pengeluaran + tombol hapus
-  // void _showExpenseDetails(BuildContext context, Expense expense) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) => AlertDialog(
-  //       title: Text(expense.title),
-  //       content: Column(
-  //         mainAxisSize: MainAxisSize.min,
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //         children: [
-  //           Text('Jumlah: ${expense.formattedAmount}'),
-  //           const SizedBox(height: 8),
-  //           Text('Kategori: ${expense.category}'),
-  //           const SizedBox(height: 8),
-  //           Text('Tanggal: ${expense.formattedDate}'),
-  //           const SizedBox(height: 8),
-  //           Text('Deskripsi: ${expense.description}'),
-  //         ],
-  //       ),
-  //       actions: [
-  //         TextButton(
-  //           onPressed: () => Navigator.pop(context),
-  //           child: const Text('Tutup'),
-  //         ),
-  //         TextButton(
-  //           onPressed: () {
-  //             setState(() {
-  //               ExpenseManager.expenses.remove(expense);
-  //               _filterExpenses();
-  //             });
-  //             Navigator.pop(context);
-  //             ScaffoldMessenger.of(context).showSnackBar(
-  //               SnackBar(content: Text('Pengeluaran dihapus')),
-  //             );
-  //           },
-  //           child: const Text('Hapus', style: TextStyle(color: Colors.red)),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
+  Future<void> _exportToCSV(
+    BuildContext context,
+    List<Expense> expenses,
+  ) async {
+    final csv = StringBuffer();
+    csv.writeln('Judul,Nominal,Kategori,Tanggal,Deskripsi');
+    for (var e in expenses) {
+      csv.writeln(
+        '"${e.title}",${e.amount},"${e.category}","${e.formattedDate}","${e.description}"',
+      );
+    }
+
+    final directory = await getTemporaryDirectory();
+    final path = '${directory.path}/pengeluaran.csv';
+    final file = File(path);
+    await file.writeAsString(csv.toString());
+
+    await Share.shareXFiles([XFile(path)], text: 'Export Data Pengeluaran');
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Data diekspor ke CSV')));
+  }
 
   // Detail pengeluaran + tombol hapus & edit
   void _showExpenseDetails(BuildContext context, Expense expense) {
@@ -240,7 +227,7 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
               TextButton(
                 onPressed: () {
                   setState(() {
-                    ExpenseManager.expenses.remove(expense);
+                    ExpenseService.expenses.remove(expense);
                     _filterExpenses();
                   });
                   Navigator.pop(context);
@@ -328,9 +315,9 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
                       description: descController.text,
                     );
                     setState(() {
-                      int idx = ExpenseManager.expenses.indexOf(expense);
+                      int idx = ExpenseService.expenses.indexOf(expense);
                       if (idx != -1) {
-                        ExpenseManager.expenses[idx] = editedExpense;
+                        ExpenseService.expenses[idx] = editedExpense;
                         _filterExpenses();
                       }
                     });
@@ -384,7 +371,7 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
   // Total pengeluaran (semua item)
   double _getTotal(List<Expense> expenses) {
     // Gunakan getTotalByCategory lalu jumlahkan semua kategori
-    final totals = ExpenseManager.getTotalByCategory(expenses);
+    final totals = ExpenseService.getTotalByCategory(expenses);
     return totals.values.fold(0, (sum, value) => sum + value);
   }
 
