@@ -1,96 +1,122 @@
 import 'package:flutter/material.dart';
-import 'register_screen.dart';
 import 'home_screen.dart';
+import 'register_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  // Key untuk form
+  final _formKey = GlobalKey<FormState>();
+
+  // Controller untuk membaca input user
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  // Fungsi untuk handle login
+  void _login() {
+    if (_formKey.currentState!.validate()) {
+      // Jika semua validasi lolos
+      final username = usernameController.text;
+      final password = passwordController.text;
+
+      // Contoh login sederhana (tanpa backend)
+      if (username == 'user1' && password == 'password1') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Login berhasil!')),
+        );
+
+        // Pindah ke HomeScreen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Username atau password salah!')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Masuk'),
+        title: const Text('Masuk'),
         backgroundColor: Colors.blue,
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Logo aplikasi
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                shape: BoxShape.circle,
+        padding: const EdgeInsets.all(16.0),
+        // Bungkus dengan Form
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Username Field
+              TextFormField(
+                controller: usernameController,
+                decoration: const InputDecoration(
+                  labelText: 'Username',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.account_circle),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Username tidak boleh kosong';
+                  }
+                  if (value.length < 4) {
+                    return 'Username minimal 4 karakter';
+                  }
+                  return null;
+                },
               ),
-              child: Icon(Icons.person, size: 50, color: Colors.white),
-            ),
-            SizedBox(height: 32),
+              const SizedBox(height: 16),
 
-            // Field username
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Username',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.person),
+              // Password Field
+              TextFormField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Password',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.lock),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Password tidak boleh kosong';
+                  }
+                  if (value.length < 6) {
+                    return 'Password minimal 6 karakter';
+                  }
+                  return null;
+                },
               ),
-            ),
-            SizedBox(height: 16),
+              const SizedBox(height: 24),
 
-            // Field password
-            TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.lock),
+              // Tombol Login
+              ElevatedButton(
+                onPressed: _login,
+                child: const Text('MASUK'),
               ),
-            ),
-            SizedBox(height: 24),
 
-            // Tombol login
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
+              // Link ke Register
+              TextButton(
                 onPressed: () {
-                  // Navigasi ke HomeScreen dengan pushReplacement
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                    MaterialPageRoute(builder: (context) => const RegisterScreen()),
                   );
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                ),
-                child: Text(
-                  'MASUK',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
+                child: const Text('Belum punya akun? Daftar'),
               ),
-            ),
-            SizedBox(height: 16),
-
-            // Link ke halaman register
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Belum punya akun? "),
-                TextButton(
-                  onPressed: () {
-                    // Navigasi ke RegisterScreen dengan push
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const RegisterScreen()),
-                    );
-                  },
-                  child: Text('Daftar'),
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

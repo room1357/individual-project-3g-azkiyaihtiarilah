@@ -595,7 +595,7 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
     );
   }
 
-  // 🔍 Filter
+  // Filter
   void _filterExpenses() {
     setState(() {
       filteredExpenses = expenses.where((expense) {
@@ -613,7 +613,7 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
     });
   }
 
-  // 🧮 Statistik
+  // Statistik
   Widget _buildStatCard(String label, String value) {
     return Column(
       children: [
@@ -629,7 +629,7 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
     return totals.values.fold(0, (sum, value) => sum + value);
   }
 
-  // 🎨 UI Helper
+  // UI Helper
   Color _getCategoryColor(String category) {
     switch (category.toLowerCase()) {
       case 'makanan':
@@ -664,7 +664,7 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
     }
   }
 
-  // 📤 Export ke CSV (Mobile)
+  // Export ke CSV (Mobile)
   Future<void> _exportToCSV(
       BuildContext context, List<Expense> expenses) async {
     final csv = StringBuffer();
@@ -684,7 +684,7 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
         .showSnackBar(const SnackBar(content: Text('Berhasil export ke CSV')));
   }
 
-  // 📤 Export ke CSV (Web)
+  // Export ke CSV (Web)
   Future<void> _exportToCSVWeb(List<Expense> expenses) async {
     final csv = StringBuffer();
     csv.writeln('Judul,Nominal,Kategori,Tanggal,Deskripsi');
@@ -704,7 +704,7 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
     html.Url.revokeObjectUrl(url);
   }
 
-  // 📄 Export ke PDF (Mobile)
+  // Export ke PDF (Mobile)
   Future<void> _exportToPDF(
       BuildContext context, List<Expense> expenses) async {
     final pdf = pw.Document();
@@ -741,7 +741,7 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
         .showSnackBar(const SnackBar(content: Text('Berhasil export ke PDF')));
   }
 
-  // 📄 Export ke PDF (Web)
+  // Export ke PDF (Web)
   Future<void> _exportToPDFWeb(List<Expense> expenses) async {
     final pdf = pw.Document();
     pdf.addPage(pw.MultiPage(build: (context) {
@@ -778,7 +778,7 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
     html.Url.revokeObjectUrl(url);
   }
 
-  // 📋 Detail
+  // Detail
   void _showExpenseDetails(BuildContext context, Expense expense) {
     showDialog(
       context: context,
