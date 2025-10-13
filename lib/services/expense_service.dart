@@ -10,6 +10,14 @@ class ExpenseService {
     'Pendidikan',
   ];
 
+  static Map<String, String> categoryNames = {
+    'food': 'Makanan',
+    'transportation': 'Transportasi',
+    'utilities': 'Utilitas',
+    'entertainment': 'Hiburan',
+    'education': 'Pendidikan',
+  };
+
   // Tambahkan fungsi untuk menambah kategori baru
   static void addCategory(String name) {
     if (!categories.contains(name)) {
