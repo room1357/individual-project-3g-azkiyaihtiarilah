@@ -3,7 +3,7 @@ class User {
   final String email;
   final String username;
   final String password;
-  
+
   User({
     required this.fullname,
     required this.email,
@@ -11,12 +11,17 @@ class User {
     required this.password,
   });
 
-  final List<User> userList = [
-	User(
-		fullname: 'User Dummy',
-		email: 'user1@example.com',
-		username: 'user1',
-		password: 'password1',
-	),
-];
+  Map<String, dynamic> toJson() => {
+        'fullname': fullname,
+        'email': email,
+        'username': username,
+        'password': password,
+      };
+
+  factory User.fromJson(Map<String, dynamic> json) => User(
+        fullname: json['fullname'],
+        email: json['email'],
+        username: json['username'],
+        password: json['password'],
+      );
 }

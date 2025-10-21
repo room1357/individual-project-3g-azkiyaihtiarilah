@@ -9,146 +9,230 @@ import 'category_screen.dart';
 import 'statistics_screen.dart';
 import 'message_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  // Daftar visibilitas untuk animasi
+  final List<bool> _visibleItems = List.generate(8, (index) => false);
+
+  @override
+  void initState() {
+    super.initState();
+    _startStaggeredAnimation();
+  }
+
+  // Fungsi untuk memberi delay animasi antar item
+  void _startStaggeredAnimation() async {
+    for (int i = 0; i < _visibleItems.length; i++) {
+      await Future.delayed(const Duration(milliseconds: 100));
+      setState(() {
+        _visibleItems[i] = true;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final items = [
+      {
+        'title': 'Pengeluaran Advanced',
+        'icon': Icons.bar_chart,
+        'color': Colors.green,
+        'screen': const AdvancedExpenseListScreen(),
+      },
+      {
+        'title': 'Pengeluaran Basic',
+        'icon': Icons.attach_money,
+        'color': Colors.lightGreen,
+        'screen': const ExpenseListScreen(),
+      },
+      {
+        'title': 'Profil',
+        'icon': Icons.person,
+        'color': Colors.blueAccent,
+        'screen': const ProfileScreen(),
+      },
+      {
+        'title': 'Pesan',
+        'icon': Icons.message,
+        'color': Colors.orangeAccent,
+        'screen': const MessageScreen(),
+      },
+      {
+        'title': 'Statistik',
+        'icon': Icons.pie_chart,
+        'color': Colors.indigoAccent,
+        'screen': const StatisticScreen(),
+      },
+      {
+        'title': 'Kategori',
+        'icon': Icons.category,
+        'color': Colors.teal,
+        'screen': const CategoryScreen(),
+      },
+      {
+        'title': 'Tentang',
+        'icon': Icons.info_outline,
+        'color': Colors.redAccent,
+        'screen': const AboutScreen(),
+      },
+      {
+        'title': 'Pengaturan',
+        'icon': Icons.settings,
+        'color': Colors.purpleAccent,
+        'screen': const SettingScreen(),
+      },
+    ];
+
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text('Beranda'),
-        backgroundColor: Colors.blue,
+        title: const Text(
+          'Beranda',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
         actions: [
           IconButton(
+            icon: const Icon(Icons.logout, color: Colors.white),
             onPressed: () {
-              // Logout dengan pushAndRemoveUntil
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => const LoginScreen()),
-                (route) => false, // Hapus semua route sebelumnya
+                (route) => false,
               );
             },
-            icon: Icon(Icons.logout),
           ),
         ],
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Dashboard',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
-              ),
-            ),
-            SizedBox(height: 20),
-            Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                children: [
-                  _buildDashboardCard('Pengeluaran Advanced',
-                    Icons.bar_chart,
-                    Colors.green,
-                    () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AdvancedExpenseListScreen(),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF6dd5ed), Color(0xFF2193b0)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Dashboard',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  'Pilih menu untuk melanjutkan:',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: GridView.builder(
+                    itemCount: items.length,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                      childAspectRatio: 1,
+                    ),
+                    itemBuilder: (context, index) {
+                      final item = items[index];
+                      return AnimatedOpacity(
+                        opacity: _visibleItems[index] ? 1 : 0,
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.easeOut,
+                        child: AnimatedScale(
+                          scale: _visibleItems[index] ? 1 : 0.8,
+                          duration: const Duration(milliseconds: 400),
+                          curve: Curves.easeOutBack,
+                          child: _buildDashboardCard(
+                            title: item['title'] as String,
+                            icon: item['icon'] as IconData,
+                            color: item['color'] as Color,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => item['screen'] as Widget,
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       );
                     },
-                  ),
-                  _buildDashboardCard('Pengeluaran Basic', Icons.attach_money, Colors.green, () {
-                    // Navigasi ke ExpenseListScreen
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const ExpenseListScreen()),
-                    );
-                  }),
-                  _buildDashboardCard('Profil',Icons.person,Colors.blue,() {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const ProfileScreen()),
-                      );
-                    },
-                  ),
-                  _buildDashboardCard('Pesan',Icons.message,Colors.orange,() {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const MessageScreen()),
-                      );
-                    },
-                  ),
-                  _buildDashboardCard('Statistik',Icons.pie_chart,Colors.indigo,() {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const StatisticScreen()),
-                      );
-                    },
-                  ),
-                  _buildDashboardCard('Kategori',Icons.category,Colors.teal,() {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const CategoryScreen()),
-                      );
-                    },
-                  ),
-                  _buildDashboardCard('Tentang',Icons.info,Colors.red,() {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const AboutScreen(),),
-                      );
-                    },
-                  ),
-                  _buildDashboardCard('Pengaturan', Icons.settings,Colors.purple,() {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const SettingScreen()),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDashboardCard(String title, IconData icon, Color color, VoidCallback? onTap) {
-    return Card(
-      elevation: 4,
-      child: Builder(
-        builder: (context) => InkWell(
-          onTap: onTap ?? () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Fitur $title segera hadir!')),
-            );
-          },
-          child: Container(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(icon, size: 48, color: color),
-                SizedBox(height: 12),
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDashboardCard({
+    required String title,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(20),
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.3),
+              blurRadius: 10,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.15),
+                shape: BoxShape.circle,
+              ),
+              padding: const EdgeInsets.all(16),
+              child: Icon(icon, size: 40, color: color),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+          ],
         ),
       ),
     );

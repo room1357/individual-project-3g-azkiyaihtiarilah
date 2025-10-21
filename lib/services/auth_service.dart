@@ -1,24 +1,12 @@
 import 'dart:convert';
-import '../models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../models/user.dart';
 
 class AuthService {
   static const String _userKey = 'registered_users';
   static const String _loggedInUserKey = 'logged_in_user';
 
-  // 🔹 Dummy user tunggal
-  static final List<User> _users = [
-    User(
-      fullname: 'User Dummy',
-      email: 'user1@example.com',
-      username: 'user1',
-      password: 'password1',
-    ),
-  ];
-
-  static User? _loggedInUser;
-
-  /// Simpan user baru ke SharedPreferences
+  /// Register user baru
   static Future<bool> registerUser({
     required String fullname,
     required String email,
@@ -30,7 +18,7 @@ class AuthService {
     final usersJson = prefs.getString(_userKey);
     List<dynamic> users = usersJson != null ? jsonDecode(usersJson) : [];
 
-    // Cek apakah username sudah digunakan
+    // Cek apakah username sudah ada
     bool exists = users.any((u) => u['username'] == username);
     if (exists) return false;
 
@@ -45,14 +33,14 @@ class AuthService {
     return true;
   }
 
-  /// Login user (cek username dan password)
+  /// Login user (cek dari SharedPreferences)
   static Future<bool> loginUser({
     required String username,
     required String password,
   }) async {
     final prefs = await SharedPreferences.getInstance();
-
     final usersJson = prefs.getString(_userKey);
+
     if (usersJson == null) return false;
 
     List<dynamic> users = jsonDecode(usersJson);
@@ -77,7 +65,7 @@ class AuthService {
     return userJson != null ? jsonDecode(userJson) : null;
   }
 
-  /// Logout user
+  /// Logout
   static Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_loggedInUserKey);
