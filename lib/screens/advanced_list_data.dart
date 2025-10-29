@@ -57,10 +57,17 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
                     : _exportToPDF(context, filteredExpenses);
               }
             },
-            itemBuilder: (context) => [
-              const PopupMenuItem(value: 'csv', child: Text('Export ke CSV')),
-              const PopupMenuItem(value: 'pdf', child: Text('Export ke PDF')),
-            ],
+            itemBuilder:
+                (context) => [
+                  const PopupMenuItem(
+                    value: 'csv',
+                    child: Text('Export ke CSV'),
+                  ),
+                  const PopupMenuItem(
+                    value: 'pdf',
+                    child: Text('Export ke PDF'),
+                  ),
+                ],
           ),
         ],
       ),
@@ -113,28 +120,31 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
                 height: 40,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
-                  children: ['Semua', ...ExpenseService.categoryNames.values]
-                      .map((category) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: ChoiceChip(
-                        label: Text(category),
-                        selected: selectedCategory == category,
-                        selectedColor: const Color(0xFF4BA3E3),
-                        labelStyle: TextStyle(
-                          color: selectedCategory == category
-                              ? Colors.white
-                              : Colors.black,
-                        ),
-                        onSelected: (selected) {
-                          setState(() {
-                            selectedCategory = category;
-                            _filterExpenses();
-                          });
-                        },
-                      ),
-                    );
-                  }).toList(),
+                  children:
+                      ['Semua', ...ExpenseService.categoryNames.values].map((
+                        category,
+                      ) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: ChoiceChip(
+                            label: Text(category),
+                            selected: selectedCategory == category,
+                            selectedColor: const Color(0xFF4BA3E3),
+                            labelStyle: TextStyle(
+                              color:
+                                  selectedCategory == category
+                                      ? Colors.white
+                                      : Colors.black,
+                            ),
+                            onSelected: (selected) {
+                              setState(() {
+                                selectedCategory = category;
+                                _filterExpenses();
+                              });
+                            },
+                          ),
+                        );
+                      }).toList(),
                 ),
               ),
               const SizedBox(height: 20),
@@ -179,53 +189,57 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
               // Daftar pengeluaran
               filteredExpenses.isEmpty
                   ? const Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Center(
-                        child: Text(
-                          'Tidak ada pengeluaran ditemukan',
-                          style: TextStyle(color: Colors.grey),
-                        ),
+                    padding: EdgeInsets.all(20),
+                    child: Center(
+                      child: Text(
+                        'Tidak ada pengeluaran ditemukan',
+                        style: TextStyle(color: Colors.grey),
                       ),
-                    )
-                  : Column(
-                      children: filteredExpenses.map((expense) {
-                        return Card(
-                          color: Colors.white,
-                          elevation: 3,
-                          margin: const EdgeInsets.symmetric(vertical: 6),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor:
-                                  _getCategoryColor(expense.category),
-                              child: Icon(
-                                _getCategoryIcon(expense.category),
-                                color: Colors.white,
-                              ),
-                            ),
-                            title: Text(
-                              expense.title,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Text(
-                              '${expense.category} • ${expense.formattedDate}',
-                              style: TextStyle(color: Colors.grey[600]),
-                            ),
-                            trailing: Text(
-                              expense.formattedAmount,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.red[600],
-                              ),
-                            ),
-                            onTap: () => _showExpenseDetails(context, expense),
-                          ),
-                        );
-                      }).toList(),
                     ),
+                  )
+                  : Column(
+                    children:
+                        filteredExpenses.map((expense) {
+                          return Card(
+                            color: Colors.white,
+                            elevation: 3,
+                            margin: const EdgeInsets.symmetric(vertical: 6),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18),
+                            ),
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: _getCategoryColor(
+                                  expense.category,
+                                ),
+                                child: Icon(
+                                  _getCategoryIcon(expense.category),
+                                  color: Colors.white,
+                                ),
+                              ),
+                              title: Text(
+                                expense.title,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              subtitle: Text(
+                                '${expense.category} • ${expense.formattedDate}',
+                                style: TextStyle(color: Colors.grey[600]),
+                              ),
+                              trailing: Text(
+                                expense.formattedAmount,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red[600],
+                                ),
+                              ),
+                              onTap:
+                                  () => _showExpenseDetails(context, expense),
+                            ),
+                          );
+                        }).toList(),
+                  ),
             ],
           ),
         ),
@@ -250,9 +264,14 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
         Icon(icon, color: const Color(0xFF4BA3E3)),
         const SizedBox(height: 6),
         Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-        Text(value,
-            style: const TextStyle(
-                fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black)),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
       ],
     );
   }
@@ -294,19 +313,20 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
   // ======== FILTER & EXPORT ========
   void _filterExpenses() {
     setState(() {
-      filteredExpenses = expenses.where((expense) {
-        bool matchesSearch = searchController.text.isEmpty ||
-            expense.title
-                .toLowerCase()
-                .contains(searchController.text.toLowerCase());
-        bool matchesCategory =
-            selectedCategory == 'Semua' || expense.category == selectedCategory;
-        return matchesSearch && matchesCategory;
-      }).toList();
+      filteredExpenses =
+          expenses.where((expense) {
+            bool matchesSearch =
+                searchController.text.isEmpty ||
+                expense.title.toLowerCase().contains(
+                  searchController.text.toLowerCase(),
+                );
+            bool matchesCategory =
+                selectedCategory == 'Semua' ||
+                expense.category == selectedCategory;
+            return matchesSearch && matchesCategory;
+          }).toList();
     });
   }
-
-  
 
   double _getTotal(List<Expense> expenses) {
     final totals = ExpenseService.getTotalByCategory(expenses);
@@ -314,12 +334,15 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
   }
 
   Future<void> _exportToCSV(
-      BuildContext context, List<Expense> expenses) async {
+    BuildContext context,
+    List<Expense> expenses,
+  ) async {
     final csv = StringBuffer();
     csv.writeln('Judul,Nominal,Kategori,Tanggal,Deskripsi');
     for (var e in expenses) {
       csv.writeln(
-          '"${e.title}",${e.amount},"${e.category}","${e.formattedDate}","${e.description}"');
+        '"${e.title}",${e.amount},"${e.category}","${e.formattedDate}","${e.description}"',
+      );
     }
 
     final dir = await getTemporaryDirectory();
@@ -334,7 +357,8 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
     csv.writeln('Judul,Nominal,Kategori,Tanggal,Deskripsi');
     for (var e in expenses) {
       csv.writeln(
-          '"${e.title}",${e.amount},"${e.category}","${e.formattedDate}","${e.description}"');
+        '"${e.title}",${e.amount},"${e.category}","${e.formattedDate}","${e.description}"',
+      );
     }
 
     final bytes = utf8.encode(csv.toString());
@@ -347,29 +371,48 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
   }
 
   Future<void> _exportToPDF(
-      BuildContext context, List<Expense> expenses) async {
+    BuildContext context,
+    List<Expense> expenses,
+  ) async {
     final pdf = pw.Document();
-    pdf.addPage(pw.MultiPage(
-      build: (context) => [
-        pw.Center(
-          child: pw.Text('Laporan Pengeluaran',
-              style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
-        ),
-        pw.SizedBox(height: 20),
-        pw.Table.fromTextArray(
-          headers: ['Judul', 'Nominal', 'Kategori', 'Tanggal', 'Deskripsi'],
-          data: expenses
-              .map((e) => [
-                    e.title,
-                    'Rp ${e.amount.toStringAsFixed(0)}',
-                    e.category,
-                    e.formattedDate,
-                    e.description
-                  ])
-              .toList(),
-        )
-      ],
-    ));
+    pdf.addPage(
+      pw.MultiPage(
+        build:
+            (context) => [
+              pw.Center(
+                child: pw.Text(
+                  'Laporan Pengeluaran',
+                  style: pw.TextStyle(
+                    fontSize: 20,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              ),
+              pw.SizedBox(height: 20),
+              pw.Table.fromTextArray(
+                headers: [
+                  'Judul',
+                  'Nominal',
+                  'Kategori',
+                  'Tanggal',
+                  'Deskripsi',
+                ],
+                data:
+                    expenses
+                        .map(
+                          (e) => [
+                            e.title,
+                            'Rp ${e.amount.toStringAsFixed(0)}',
+                            e.category,
+                            e.formattedDate,
+                            e.description,
+                          ],
+                        )
+                        .toList(),
+              ),
+            ],
+      ),
+    );
 
     final dir = await getTemporaryDirectory();
     final path = '${dir.path}/laporan_pengeluaran.pdf';
@@ -380,27 +423,44 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
 
   Future<void> _exportToPDFWeb(List<Expense> expenses) async {
     final pdf = pw.Document();
-    pdf.addPage(pw.MultiPage(
-      build: (context) => [
-        pw.Center(
-          child: pw.Text('Laporan Pengeluaran',
-              style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
-        ),
-        pw.SizedBox(height: 20),
-        pw.Table.fromTextArray(
-          headers: ['Judul', 'Nominal', 'Kategori', 'Tanggal', 'Deskripsi'],
-          data: expenses
-              .map((e) => [
-                    e.title,
-                    'Rp ${e.amount.toStringAsFixed(0)}',
-                    e.category,
-                    e.formattedDate,
-                    e.description
-                  ])
-              .toList(),
-        )
-      ],
-    ));
+    pdf.addPage(
+      pw.MultiPage(
+        build:
+            (context) => [
+              pw.Center(
+                child: pw.Text(
+                  'Laporan Pengeluaran',
+                  style: pw.TextStyle(
+                    fontSize: 20,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              ),
+              pw.SizedBox(height: 20),
+              pw.Table.fromTextArray(
+                headers: [
+                  'Judul',
+                  'Nominal',
+                  'Kategori',
+                  'Tanggal',
+                  'Deskripsi',
+                ],
+                data:
+                    expenses
+                        .map(
+                          (e) => [
+                            e.title,
+                            'Rp ${e.amount.toStringAsFixed(0)}',
+                            e.category,
+                            e.formattedDate,
+                            e.description,
+                          ],
+                        )
+                        .toList(),
+              ),
+            ],
+      ),
+    );
 
     final bytes = await pdf.save();
     final blob = html.Blob([bytes], 'application/pdf');
@@ -412,28 +472,171 @@ class _AdvancedExpenseListScreenState extends State<AdvancedExpenseListScreen> {
   }
 
   void _showExpenseDetails(BuildContext context, Expense expense) {
+    // Controller untuk setiap field
+    final titleController = TextEditingController(text: expense.title);
+    final amountController = TextEditingController(
+      text: expense.amount.toString(),
+    );
+    final descriptionController = TextEditingController(
+      text: expense.description,
+    );
+    String selectedCategory = expense.category;
+
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(expense.title),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Jumlah: ${expense.formattedAmount}'),
-            Text('Kategori: ${expense.category}'),
-            Text('Tanggal: ${expense.formattedDate}'),
-            Text('Deskripsi: ${expense.description}'),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Tutup'),
+      builder:
+          (_) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            title: const Text(
+              'Detail & Edit Pengeluaran',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextField(
+                    controller: titleController,
+                    decoration: const InputDecoration(
+                      labelText: 'Judul',
+                      prefixIcon: Icon(Icons.title),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: amountController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Jumlah (Rp)',
+                      prefixIcon: Icon(Icons.attach_money),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  DropdownButtonFormField<String>(
+                    value: selectedCategory,
+                    decoration: const InputDecoration(
+                      labelText: 'Kategori',
+                      prefixIcon: Icon(Icons.category),
+                    ),
+                    items:
+                        ExpenseService.categoryNames.values.map((category) {
+                          return DropdownMenuItem(
+                            value: category,
+                            child: Text(category),
+                          );
+                        }).toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        selectedCategory = value;
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: descriptionController,
+                    decoration: const InputDecoration(
+                      labelText: 'Deskripsi',
+                      prefixIcon: Icon(Icons.description),
+                    ),
+                    maxLines: 2,
+                  ),
+                ],
+              ),
+            ),
+            actionsAlignment: MainAxisAlignment.spaceBetween,
+            actions: [
+              // Tombol Hapus
+              TextButton.icon(
+                icon: const Icon(Icons.delete, color: Colors.red),
+                label: const Text('Hapus', style: TextStyle(color: Colors.red)),
+                onPressed: () {
+                  // Konfirmasi sebelum menghapus
+                  showDialog(
+                    context: context,
+                    builder:
+                        (ctx) => AlertDialog(
+                          title: const Text('Konfirmasi Hapus'),
+                          content: const Text(
+                            'Apakah Anda yakin ingin menghapus pengeluaran ini?',
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(ctx),
+                              child: const Text('Batal'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  expenses.removeWhere(
+                                    (e) => e.id == expense.id,
+                                  );
+                                  filteredExpenses = List.from(expenses);
+                                });
+                                Navigator.pop(ctx); // tutup konfirmasi
+                                Navigator.pop(context); // tutup detail
+                              },
+                              child: const Text(
+                                'Hapus',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
+                          ],
+                        ),
+                  );
+                },
+              ),
+
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Tombol Batal
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Batal'),
+                  ),
+
+                  // Tombol Simpan
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.save),
+                    label: const Text('Simpan'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF4BA3E3),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    onPressed: () {
+                      final updatedExpense = Expense(
+                        id: expense.id, // tetap gunakan ID lama
+                        title: titleController.text,
+                        amount:
+                            double.tryParse(amountController.text) ??
+                            expense.amount,
+                        category: selectedCategory,
+                        date: expense.date,
+                        description: descriptionController.text,
+                      );
+
+                      setState(() {
+                        final index = expenses.indexWhere(
+                          (e) => e.id == expense.id,
+                        );
+                        if (index != -1) {
+                          expenses[index] = updatedExpense;
+                          filteredExpenses = List.from(expenses);
+                        }
+                      });
+
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 }

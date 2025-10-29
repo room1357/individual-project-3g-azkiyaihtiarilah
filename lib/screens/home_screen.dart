@@ -46,10 +46,16 @@ class _HomeScreenState extends State<HomeScreen> {
         'screen': const AdvancedExpenseListScreen(),
       },
       {
-        'title': 'Pengeluaran Basic',
-        'icon': Icons.attach_money,
-        'color': Colors.lightGreen,
-        'screen': const ExpenseListScreen(),
+        'title': 'Statistik',
+        'icon': Icons.pie_chart,
+        'color': Colors.indigoAccent,
+        'screen': const StatisticScreen(),
+      },
+      {
+        'title': 'Kategori',
+        'icon': Icons.category,
+        'color': Colors.teal,
+        'screen': const CategoryScreen(),
       },
       {
         'title': 'Profil',
@@ -64,22 +70,16 @@ class _HomeScreenState extends State<HomeScreen> {
         'screen': const MessageScreen(),
       },
       {
-        'title': 'Statistik',
-        'icon': Icons.pie_chart,
-        'color': Colors.indigoAccent,
-        'screen': const StatisticScreen(),
-      },
-      {
-        'title': 'Kategori',
-        'icon': Icons.category,
-        'color': Colors.teal,
-        'screen': const CategoryScreen(),
-      },
-      {
         'title': 'Tentang',
         'icon': Icons.info_outline,
         'color': Colors.redAccent,
         'screen': const AboutScreen(),
+      },
+      {
+        'title': 'Pengeluaran Basic',
+        'icon': Icons.attach_money,
+        'color': Colors.lightGreen,
+        'screen': const ExpenseListScreen(),
       },
       {
         'title': 'Pengaturan',
@@ -97,6 +97,11 @@ class _HomeScreenState extends State<HomeScreen> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
+        titleTextStyle: const TextStyle(
+          fontSize: 30,
+          fontWeight: FontWeight.bold,
+          color: Color.fromARGB(142, 1, 30, 44),
+        ),
         elevation: 0,
         backgroundColor: Colors.transparent,
         actions: [
