@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
+import 'screens/main_navigation.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,8 +16,10 @@ class MyApp extends StatelessWidget {
       title: 'Aplikasi Pengeluaran',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
       ),
-      home: const LoginScreen(), // Halaman pertama
+      home: const LoginScreen(),
+      // Ganti dengan: const MainNavigation() jika mau langsung test navigasi
     );
   }
 }

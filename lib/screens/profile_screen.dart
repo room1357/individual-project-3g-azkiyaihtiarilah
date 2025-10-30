@@ -94,33 +94,6 @@ class ProfileScreen extends StatelessWidget {
                 ),
 
                 const SizedBox(height: 40),
-
-                // Tombol kembali ke beranda
-                ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => const HomeScreen()),
-                    );
-                  },
-                  icon: const Icon(Icons.arrow_back),
-                  label: const Text(
-                    'KEMBALI KE BERANDA',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.blueAccent,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 14,
-                      horizontal: 24,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    elevation: 6,
-                  ),
-                ),
               ],
             ),
           ),

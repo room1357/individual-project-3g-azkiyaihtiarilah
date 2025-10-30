@@ -239,31 +239,6 @@ class _StatisticScreenState extends State<StatisticScreen> {
             ),
 
             const SizedBox(height: 8),
-
-            // === Tombol kembali ke HomeScreen ===
-            Center(
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  );
-                },
-                icon: const Icon(Icons.home),
-                label: const Text('Kembali ke Home'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.indigo,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 14,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),

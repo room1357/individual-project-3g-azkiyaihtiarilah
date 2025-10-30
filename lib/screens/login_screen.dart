@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
-import 'home_screen.dart';
 import 'register_screen.dart';
+import 'main_navigation.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen>
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -30,24 +31,38 @@ class _LoginScreenState extends State<LoginScreen>
         CurvedAnimation(parent: _animationController, curve: Curves.easeIn);
   }
 
-  void _login() async {
+  Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true);
+
       final success = await AuthService.loginUser(
         username: usernameController.text.trim(),
         password: passwordController.text.trim(),
       );
 
+      setState(() => _isLoading = false);
+
+      if (!mounted) return;
+
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Login berhasil!')),
+          const SnackBar(
+            content: Text('Login berhasil!'),
+            backgroundColor: Colors.green,
+          ),
         );
+
+        // ⬇️ Arahkan ke MainNavigation (bukan HomeScreen)
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
+          MaterialPageRoute(builder: (context) => const MainNavigation()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Username atau password salah!')),
+          const SnackBar(
+            content: Text('Username atau password salah!'),
+            backgroundColor: Colors.redAccent,
+          ),
         );
       }
     }
@@ -110,6 +125,8 @@ class _LoginScreenState extends State<LoginScreen>
                           style: TextStyle(color: Colors.black54),
                         ),
                         const SizedBox(height: 32),
+
+                        // Username
                         TextFormField(
                           controller: usernameController,
                           decoration: InputDecoration(
@@ -121,11 +138,14 @@ class _LoginScreenState extends State<LoginScreen>
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          validator: (value) => value == null || value.isEmpty
-                              ? 'Wajib diisi'
-                              : null,
+                          validator: (value) =>
+                              value == null || value.isEmpty
+                                  ? 'Wajib diisi'
+                                  : null,
                         ),
                         const SizedBox(height: 16),
+
+                        // Password
                         TextFormField(
                           controller: passwordController,
                           obscureText: true,
@@ -138,11 +158,14 @@ class _LoginScreenState extends State<LoginScreen>
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          validator: (value) => value == null || value.isEmpty
-                              ? 'Wajib diisi'
-                              : null,
+                          validator: (value) =>
+                              value == null || value.isEmpty
+                                  ? 'Wajib diisi'
+                                  : null,
                         ),
                         const SizedBox(height: 24),
+
+                        // Tombol Login
                         SizedBox(
                           width: double.infinity,
                           height: 48,
@@ -154,25 +177,37 @@ class _LoginScreenState extends State<LoginScreen>
                               ),
                               elevation: 4,
                             ),
-                            onPressed: _login,
-                            child: const Text(
-                              'MASUK',
-                              style: TextStyle(
-                                fontSize: 16,
-                                letterSpacing: 1.2,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                            onPressed: _isLoading ? null : _login,
+                            child: _isLoading
+                                ? const SizedBox(
+                                    width: 24,
+                                    height: 24,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2.5,
+                                    ),
+                                  )
+                                : const Text(
+                                    'MASUK',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      letterSpacing: 1.2,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                           ),
                         ),
+
                         const SizedBox(height: 12),
+
+                        // Tombol ke Register
                         TextButton(
                           onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      const RegisterScreen()),
+                                builder: (context) => const RegisterScreen(),
+                              ),
                             );
                           },
                           child: const Text(
